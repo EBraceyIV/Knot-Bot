@@ -2,9 +2,10 @@
 import discord
 from discord.ext import commands
 import os
+import TOKEN
 
 # Bot setup
-TOKEN = 'NzI2MjU0NTAzMzI1NTk3NzM3.Xvaniw.lnQ2TDg29EiUpwAlBOJwfipEOYI'
+TOKEN = TOKEN.token()
 
 bot = commands.Bot(command_prefix=['kb:', 'Kb:', 'kB:', 'KB'])
 
