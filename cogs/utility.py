@@ -3,9 +3,13 @@ import shelve
 import asyncio
 from discord.ext import commands
 from cogs.html import get_html
+from mcstatus import MinecraftServer
 
 # Load all of the stored usernames
 usernames = shelve.open('BB_usernames')
+
+# mcstatus init
+server = MinecraftServer.lookup("192.99.4.195:25577")  # my minecraft server
 
 
 class Utility(commands.Cog):
@@ -14,6 +18,23 @@ class Utility(commands.Cog):
         self.bot = bot
 
 # Commands
+
+    # Provides current player count and latency to the Minecraft server
+    @commands.command(name="blocks", help='Minecraft Server Info')
+    async def blocks(self, ctx):
+        # Get all of the server information
+        status = server.status()
+
+        # Build the embed message using the server query
+        embed = discord.Embed(title='The Official Unofficial Bracelet Enthusiast Minecraft Server',
+                              color=0xdd3333,
+                              description='Come play with some blocks at {0}:{1}'
+                              .format(server.host, server.port))
+        embed.add_field(name='Players Online:', value=status.players.online)
+        embed.add_field(name='Latency:', value=str(status.latency) + ' ms')
+        embed.add_field(name='Game Version:', value=status.version.name)
+        embed.set_footer(text='This server is hosted out of Houston, TX by Villagerhost.')
+        await ctx.send(embed=embed)
 
     # bb:user <username>, store BB usernames for use
     @commands.command(name="user", help="Tell KnotBot your BraceletBook username.",
