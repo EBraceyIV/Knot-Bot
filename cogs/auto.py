@@ -1,7 +1,8 @@
 from discord.ext import commands
 import random
 
-autoReactEmoji = ["🎉", "👍", "✨", "💖", "🤩", "🧵", "😍", "❤"]
+autoReactEmoji = ["🎉", "👍", "✨", "💖", "🤩", "🧵", "😍", "❤", "🔥", "🌟"]
+autoWIPReply = ["Looking great so far! 💪", "Loving the colors 😍", ]
 
 
 # This cog is dedicated to conducting automatic actions
@@ -14,13 +15,11 @@ class Auto(commands.Cog):
     async def on_message(self, message):
         global autoReactEmoji
 
-        if message.attachments is not None:
+        if message.attachments is not None and message.channel.id == 720833461329461347:
             for attachment in message.attachments:
                 if attachment.filename.endswith((".png", ".jpg", ".jpeg", ".gif")):
                     for reaction in random.choices(autoReactEmoji, k=2):
                         await message.add_reaction(reaction)
-                else:
-                    print("pong")
 
 
 # Add the cog
