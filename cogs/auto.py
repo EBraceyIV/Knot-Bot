@@ -1,5 +1,7 @@
-import discord
 from discord.ext import commands
+import random
+
+autoReactEmoji = ["🎉", "👍", "✨", "💖", "🤩", "🧵", "😍", "❤"]
 
 
 # This cog is dedicated to conducting automatic actions
@@ -10,11 +12,13 @@ class Auto(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        global autoReactEmoji
+
         if message.attachments is not None:
             for attachment in message.attachments:
-                if attachment.filename.lower.endswith((".png", ".jpg", ".jpeg", ".gif")):
-                    await message.add_reaction("🎉")
-                    print("ping")
+                if attachment.filename.endswith((".png", ".jpg", ".jpeg", ".gif")):
+                    for reaction in random.choices(autoReactEmoji, k=2):
+                        await message.add_reaction(reaction)
                 else:
                     print("pong")
 
