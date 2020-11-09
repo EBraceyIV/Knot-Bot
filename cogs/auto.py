@@ -10,7 +10,13 @@ class Auto(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        return
+        if message.attachments is not None:
+            for attachment in message.attachments:
+                if attachment.filename.lower.endswith((".png", ".jpg", ".jpeg", ".gif")):
+                    await message.add_reaction("🎉")
+                    print("ping")
+                else:
+                    print("pong")
 
 
 # Add the cog
