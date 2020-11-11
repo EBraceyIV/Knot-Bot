@@ -21,7 +21,7 @@ class Auto(commands.Cog):
         # Check for photos sent in the designated channels
         # Finished bracelets: 724448213955903550, WIP bracelets: 724449447391657995
         # Test channels: 627279552997228545 & 720833461329461347
-        if message.attachments is not None and message.channel.id in [627279552997228545, 720833461329461347]:
+        if message.attachments is not None and message.channel.id in [724448213955903550, 724449447391657995]:
             # In case of multiple attachments being posted at once in a message in order to process each individually
             for attachment in message.attachments:
                 # Only process photos
