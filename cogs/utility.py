@@ -50,6 +50,10 @@ class Utility(commands.Cog):
     # bb:dupe <original_id> <dupe_id>, file a "report" for duplicate patterns on BB
     @commands.command(name='dupe', help='Report a duplicate pattern on BraceletBook.')
     async def dupe(self, ctx, original_id: int, dupe_id: int):
+        if ctx.channel.id != 741288985988694127:
+            await ctx.reply("Please report duplicates in our dedicated channel!")
+            return
+
         # Check username reply is from the right user
         def check(message):
             if ctx.message.author == message.author:
