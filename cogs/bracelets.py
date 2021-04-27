@@ -60,7 +60,7 @@ class Bracelets(commands.Cog):
 
             await ctx.send(embed=embed)
         else:
-            await ctx.send("I couldn't find #" + bracelet_id + ", sorry about that.")
+            await ctx.reply("I couldn't find #" + bracelet_id + ", sorry about that.", mention_author=False)
 
     # Preview a finished bracelet
     @commands.command(name="pre",
@@ -81,7 +81,7 @@ class Bracelets(commands.Cog):
 
             await ctx.send(embed=embed)
         else:
-            await ctx.send("I couldn't find #" + bracelet_id + ", sorry about that.")
+            await ctx.reply("I couldn't find #" + bracelet_id + ", sorry about that.", mention_author=False)
 
     @commands.command(name="pic",
                       help="See a picture of a completed bracelet for a certain pattern!")
@@ -95,7 +95,8 @@ class Bracelets(commands.Cog):
             pictures = braceletSoup.select('.photos_item > a')
 
             if not pictures:
-                await ctx.send("I couldn't find any pictures for #" + bracelet_id + ", sorry about that.")
+                await ctx.reply("I couldn't find any pictures for #" + bracelet_id + ", sorry about that.",
+                                mention_author=False)
             pic_num = random.randint(0, len(pictures)-1)
             picture = braceletSoup.select(".photos_item > a")[pic_num]
             pic_crafter = braceletSoup.select(".photos_item > .info > .added_by")[pic_num]
@@ -109,7 +110,8 @@ class Bracelets(commands.Cog):
             embed.set_image(url=picture.get('href'))
             await ctx.send(embed=embed)
         else:
-            await ctx.send("I couldn't find any pictures of #" + bracelet_id + ", sorry about that.")
+            await ctx.reply("I couldn't find any pictures of #" + bracelet_id + ", sorry about that.",
+                            mention_author=False)
 
     # These both handle ID inputs that aren't numbers
     @id.error
