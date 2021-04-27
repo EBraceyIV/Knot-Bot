@@ -23,8 +23,9 @@ class Utility(commands.Cog):
         # Store the provided username according the Discord name with #XXXX discriminator
         usernames[str(ctx.message.author)] = username
         # Send confirmation to channel
-        await ctx.send("Thank you, " + str(ctx.message.author.display_name) +
-                       "! I'll remember your BraceletBook username as " + username + " from now on.")
+        await ctx.reply("Thank you, " + str(ctx.message.author.display_name) +
+                        "! I'll remember your BraceletBook username as " + username + " from now on.",
+                        mention_author=False)
 
     # bb:dupe <original_id> <dupe_id>, file a "report" for duplicate patterns on BB
     @commands.command(name="dupe",
@@ -48,27 +49,31 @@ class Utility(commands.Cog):
 
         if not valid_id_original or not valid_id_dupe:
             # If either pattern doesn't exist, send a notice
-            await ctx.send("Hm, seems like one of those patterns doesn't exist. Please double check and try again.")
+            await ctx.reply("Hm, seems like one of those patterns doesn't exist. Please double check and try again.",
+                            mention_author=False)
 
         else:
             # Prompt for BB username if not already logged for user
             if str(ctx.message.author) not in usernames:
-                await ctx.send("It seems like I don't know your BraceletBook username. "
-                               "Send a message with just your BB username in it so I can finish your report, thanks!")
+                await ctx.reply("It seems like I don't know your BraceletBook username. "
+                                "Send a message with just your BB username in it so I can finish your report, thanks!",
+                                mention_author=False)
                 try:
                     # For some reason I can't just get the message content directly, so I take the message then pluck it
                     bb_user = await self.bot.wait_for('message', timeout=60.0, check=check)
                     bb_user = bb_user.content
                 except asyncio.TimeoutError:
-                    await ctx.send("Oops, that took a little while. "
-                                   "Please use `bb:user` and try your making your report again.")
+                    await ctx.reply("Oops, that took a little while. "
+                                    "Please use `kb:user` and try your making your report again.",
+                                    mention_author=False)
                     return
 
                 else:
                     # Store the username, send a confirmation and the requested report
                     usernames[str(ctx.message.author)] = bb_user
-                    await ctx.send("Thank you, " + str(ctx.message.author.display_name) +
-                                   "! I'll remember your BraceletBook username as " + bb_user + " from now on.")
+                    await ctx.reply("Thank you, " + str(ctx.message.author.display_name) + "! "
+                                    "I'll remember your BraceletBook username as " + bb_user + " from now on.",
+                                    mention_author=False)
                     await ctx.send("Here's your report: ")
 
             else:
@@ -87,6 +92,7 @@ class Utility(commands.Cog):
             embed.set_footer(text="This message does not indicate an actual report has been made to BB staff. "
                                   "This is for aggregation purposes and reference only. "
                                   "Thank you for your contribution.")
+
             await ctx.send(embed=embed)
 
 # Error Handling
