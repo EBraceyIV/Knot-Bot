@@ -38,6 +38,12 @@ class Auto(commands.Cog):
                         elif message.channel.id == 724449447391657995:
                             await message.channel.send(random.choice(autoWIPReply))
 
+    @commands.Cog.listener()
+    async def on_reaction_add(self, reaction, user):
+        if reaction.message.author == self.bot.user:
+            if reaction.emoji == "🗑️":
+                await reaction.message.delete()
+
 
 # Add the cog
 def setup(bot):
