@@ -5,7 +5,7 @@ from discord.ext import commands
 from cogs.html import get_html
 
 # Load all of the stored usernames
-usernames = shelve.open('BB_usernames')
+usernames = shelve.open("BB_usernames")
 
 
 class Utility(commands.Cog):
@@ -15,7 +15,8 @@ class Utility(commands.Cog):
 
 # Commands
     # bb:user <username>, store BB usernames for use
-    @commands.command(name="user", help="Tell KnotBot your BraceletBook username.",
+    @commands.command(name="user",
+                      help="Tell KnotBot your BraceletBook username.",
                       description="KnotBot can remember your BraceletBook username and apply automatically to any "
                                   "duplicate pattern reports you make.")
     async def user(self, ctx, username: str):
@@ -26,7 +27,8 @@ class Utility(commands.Cog):
                        "! I'll remember your BraceletBook username as " + username + " from now on.")
 
     # bb:dupe <original_id> <dupe_id>, file a "report" for duplicate patterns on BB
-    @commands.command(name='dupe', help='Report a duplicate pattern on BraceletBook.')
+    @commands.command(name="dupe",
+                      help="Report a duplicate pattern on BraceletBook.")
     async def dupe(self, ctx, original_id: int, dupe_id: int):
         if ctx.channel.id != 741288985988694127:
             await ctx.reply("Please report duplicates in our dedicated channel!")
@@ -96,12 +98,12 @@ class Utility(commands.Cog):
     @dupe.error
     async def dupe_arg_error(self, ctx, error):
         if isinstance(error, commands.BadArgument):
-            await ctx.send('Looks like you entered some info wrong, double check and try again.')
+            await ctx.send("Looks like you entered some info wrong, double check and try again.")
 
     @dupe.error
     async def dupe_error(self, ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send('Looks like you forgot something, double check and try again.')
+            await ctx.send("Looks like you forgot something, double check and try again.")
 
 
 # Add the cog
