@@ -33,10 +33,10 @@ class Bracelets(commands.Cog):
     # Display information about a pattern given its #ID
     @commands.command(name="id",
                       help="Provide a pattern ID from BB and get some info in the design!")
-    async def id(self, ctx, bracelet_id: int):
-        #  Converts the input to a string for clarity in use later,
-        #  if the command runs then we know it's an int as the input should be
-        bracelet_id = str(bracelet_id)
+    async def id(self, ctx, bracelet_id):
+        #  ID taken in as a string in case the user adds "#" to the start of the ID, as is sometimes common
+        if bracelet_id[0] == "#":
+            bracelet_id = bracelet_id[1:]
         valid_id, pattern_info, style, url = get_html(bracelet_id)
 
         if valid_id:
