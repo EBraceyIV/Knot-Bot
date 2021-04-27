@@ -60,7 +60,7 @@ class Utility(commands.Cog):
                                 mention_author=False)
                 try:
                     # For some reason I can't just get the message content directly, so I take the message then pluck it
-                    bb_user = await self.bot.wait_for('message', timeout=60.0, check=check)
+                    bb_user = await self.bot.wait_for("message", timeout=60.0, check=check)
                     bb_user = bb_user.content
                 except asyncio.TimeoutError:
                     await ctx.reply("Oops, that took a little while. "
@@ -84,7 +84,7 @@ class Utility(commands.Cog):
                                               bb_user + " on BraceletBook.",
                                   color=0xf7633f)
             embed.set_author(name=report_creator + " (" + bb_user + ")")
-            embed.set_thumbnail(url='https://static.braceletbookcdn.com/images/logo_header.png')
+            embed.set_thumbnail(url="https://static.braceletbookcdn.com/images/logo_header.png")
             embed.add_field(name="Original Pattern",
                             value="[ID #" + str(original_id) + "](" + url_original + ")", inline=True)
             embed.add_field(name="Duplicate Pattern",

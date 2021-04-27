@@ -18,7 +18,7 @@ async def on_ready():
     for cog in os.listdir("cogs"):
         if cog.endswith(".py"):
             try:
-                bot.load_extension(f'cogs.{cog[:-3]}')
+                bot.load_extension(f"cogs.{cog[:-3]}")
             except Exception as e:
                 print("Couldn't load cog \"{0}\"".format(cog))
                 print("Error: {0}".format(e))

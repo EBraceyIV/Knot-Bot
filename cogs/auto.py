@@ -4,10 +4,10 @@ import random
 # Pre-made lists used to reply to posts
 autoReactEmoji = ["🎉", "👍", "✨", "💖", "🤩", "🧵", "😍", "❤", "🔥", "🌟"]
 autoWIPReply = ["Looking great so far 💪", "Loving the colors 😍",
-                "Very nice so far, can't wait for it to be finished!", "Keep up the hard work 🙌",
-                "Oooo how much more of that do you have left to do? So far so good!"]
-autoCompleteReply = ["Wowowowowow ✨✨✨", "Love those colors 😍", "Well done!!!", "That's great! How do you do it??",
-                     "It looks so good 😍", "Super cute! 🤩"]
+                "Very nice!", "Keep up the hard work 🙌", "So far so good!", "Coming together nicely I see"]
+autoCompleteReply = ["Wowowowowow ✨✨✨", "Love those colors 😍", "Well done!!!", "Wonderful!",
+                     "It looks so good 😍", "Super cute! 🤩",
+                     "I wish I could make something that nice, I'm just a bot though 🤖"]
 
 
 # This cog is dedicated to conducting automatic actions

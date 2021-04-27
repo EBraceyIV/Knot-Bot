@@ -53,10 +53,10 @@ class Bracelets(commands.Cog):
             embed.set_author(name=crafter[0].getText(),
                              url=crafter_url[0].get("href"), icon_url=crafter_icon[0].get("src"))
             embed.set_thumbnail(url=preview[0].get("src"))
-            embed.add_field(name='Dimensions', value=dims[0].getText())
-            embed.add_field(name='Strings', value=strings[0].getText())
-            embed.add_field(name='Colors', value=colors[0].getText())
-            embed.set_image(url=pattern[0].get('src'))
+            embed.add_field(name="Dimensions", value=dims[0].getText())
+            embed.add_field(name="Strings", value=strings[0].getText())
+            embed.add_field(name="Colors", value=colors[0].getText())
+            embed.set_image(url=pattern[0].get("src"))
 
             await ctx.send(embed=embed)
         else:
@@ -90,9 +90,9 @@ class Bracelets(commands.Cog):
         valid_id, pattern_info, style, url = get_html(bracelet_id)
         if valid_id:
             # Gather all of the parts of the embed message
-            braceletSoup = bs4.BeautifulSoup(pattern_info.text, 'html.parser')
+            braceletSoup = bs4.BeautifulSoup(pattern_info.text, "html.parser")
             crafter, crafter_icon, crafter_url = crafter_info(braceletSoup)
-            pictures = braceletSoup.select('.photos_item > a')
+            pictures = braceletSoup.select(".photos_item > a")
 
             if not pictures:
                 await ctx.reply("I couldn't find any pictures for #" + bracelet_id + ", sorry about that.",
@@ -107,7 +107,7 @@ class Bracelets(commands.Cog):
 
             embed.description = "This photo of #" + bracelet_id + " was uploaded " + pic_crafter.getText() + ". \n" + \
                                 "It's one of " + str(len(pictures)) + " uploaded."
-            embed.set_image(url=picture.get('href'))
+            embed.set_image(url=picture.get("href"))
             await ctx.send(embed=embed)
         else:
             await ctx.reply("I couldn't find any pictures of #" + bracelet_id + ", sorry about that.",

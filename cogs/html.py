@@ -10,8 +10,8 @@ def get_html(bracelet_id):
     # Check both url options, normal and alpha
     urls = ["https://www.braceletbook.com/patterns/normal/" + bracelet_id + "/",
             "https://www.braceletbook.com/patterns/alpha/" + bracelet_id + "/"]
-    # urls = ['https://www.braceletbook.com/variations/normal/' + bracelet_id + '/',
-    #         'https://www.braceletbook.com/variations/alpha/' + bracelet_id + '/']
+    # urls = ["https://www.braceletbook.com/variations/normal/" + bracelet_id + "/",
+    #         "https://www.braceletbook.com/variations/alpha/" + bracelet_id + "/"]
     # Using the exception given by get() in requests, determine if the pattern is a normal or an alpha
     try:
         # Get the page data if the pattern is a normal
