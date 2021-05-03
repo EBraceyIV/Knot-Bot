@@ -37,6 +37,13 @@ class Bracelets(commands.Cog):
         #  ID taken in as a string in case the user adds "#" to the start of the ID, as is sometimes common
         if bracelet_id[0] == "#":
             bracelet_id = bracelet_id[1:]
+
+        try:
+            int(bracelet_id)
+        except ValueError:
+            await ctx.reply("Looks like you entered the ID wrong, double check and try again.", mention_author=False)
+            return
+
         valid_id, pattern_info, style, url = get_html(bracelet_id)
 
         if valid_id:
