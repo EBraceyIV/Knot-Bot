@@ -13,8 +13,7 @@ def embed_init(bracelet_id, style, crafter, variations, url):
                           color=0xf7633f,
                           description=description,
                           url=url)
-    embed.set_footer(text="For any questions/comments/concerns regarding this bot please contact the owner, "
-                          "Kiwi Shark. He'll take a look when he gets the chance and appreciates the feedback.")
+    embed.set_footer(text="Please DM my owner, Kiwi Shark, with questions/comments/concerns regarding my services.")
     return embed
 
 
@@ -66,7 +65,7 @@ class Bracelets(commands.Cog):
             embed.add_field(name="Colors", value=colors[0].getText())
             embed.set_image(url=preview[0].get("src"))
 
-            await ctx.send(embed=embed)
+            await ctx.reply(embed=embed, mention_author=False)
         else:
             await ctx.reply("I couldn't find #" + bracelet_id + ", sorry about that.", mention_author=False)
 
@@ -87,7 +86,7 @@ class Bracelets(commands.Cog):
             embed = embed_extras(embed, crafter,  crafter_url, crafter_icon)
             embed.set_image(url=preview[0].get("src"))
 
-            await ctx.send(embed=embed)
+            await ctx.send(embed=embed, mention_author=False)
         else:
             await ctx.reply("I couldn't find #" + bracelet_id + ", sorry about that.", mention_author=False)
 

@@ -42,7 +42,11 @@ class Auto(commands.Cog):
     async def on_reaction_add(self, reaction, user):
         if reaction.message.author == self.bot.user:
             if reaction.emoji == "🗑️":
-                await reaction.message.delete()
+                request_msg = await self.bot.get_channel(reaction.message.reference.channel_id)\
+                    .fetch_message(reaction.message.reference.message_id)
+                if user == request_msg.author:
+                    await reaction.message.delete()
+                    await request_msg.delete()
 
 
 # Add the cog
