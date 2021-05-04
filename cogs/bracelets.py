@@ -52,6 +52,7 @@ class Bracelets(commands.Cog):
             crafter, crafter_icon, crafter_url = crafter_info(braceletSoup)
             dims, strings, colors, variations = pattern_data(braceletSoup)
             variations = "0" if variations == [] else variations[0].getText()
+            # "preview" is what the pattern looks like, whereas "pattern" is the actual knotting pattern
             preview = braceletSoup.select(".preview_svg img")
             pattern = braceletSoup.select(".pattern_image img")
 
@@ -59,11 +60,11 @@ class Bracelets(commands.Cog):
             embed = embed_init(bracelet_id, style, crafter, variations, url)
             embed.set_author(name=crafter[0].getText(),
                              url=crafter_url[0].get("href"), icon_url=crafter_icon[0].get("src"))
-            embed.set_thumbnail(url=preview[0].get("src"))
+            embed.set_thumbnail(url=pattern[0].get("src"))
             embed.add_field(name="Dimensions", value=dims[0].getText())
             embed.add_field(name="Strings", value=strings[0].getText())
             embed.add_field(name="Colors", value=colors[0].getText())
-            embed.set_image(url=pattern[0].get("src"))
+            embed.set_image(url=preview[0].get("src"))
 
             await ctx.send(embed=embed)
         else:
