@@ -7,8 +7,7 @@ import random
 
 # This gets reused often so it's a function
 def embed_init(bracelet_id, style, crafter, variations, url):
-    description = style + crafter[0].getText() + "." \
-                  if not variations else style + crafter[0].getText() + ".\n" + "Variations: " + variations
+    description = style + crafter[0].getText() + ".\n" + "Variations: " + variations
     embed = discord.Embed(title="Pattern #" + bracelet_id,
                           color=0xf7633f,
                           description=description,
