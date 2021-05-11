@@ -4,7 +4,6 @@ from discord.ext import commands
 import os
 import TOKEN
 
-# TODO: Configure manual bot message deleting for users
 # TODO: Work on some kind of recommended products system and maybe user reviews
 # TODO: Multi-server compatibility
 
