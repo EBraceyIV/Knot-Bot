@@ -24,6 +24,23 @@ def embed_extras(embed, crafter, crafter_url, crafter_icon):
     return embed
 
 
+def id_processing(bracelet_id):
+    #  ID taken in as a string in case the user adds "#" to the start of the ID, as is sometimes common
+    if bracelet_id[0] == "#":
+        bracelet_id = bracelet_id[1:]
+
+    # Check to see if the input is a number, provide a specific response if it isn't
+    try:
+        int(bracelet_id)
+    except ValueError:
+        # Raising this exception lets the response be sent via the command error events, so this function doesn't have
+        # to be an async function
+        raise commands.BadArgument
+
+    # get_html function returns "valid_id, pattern_info, style, url"
+    return get_html(bracelet_id)
+
+
 class Bracelets(commands.Cog):
 
     def __init__(self, bot):
@@ -33,17 +50,8 @@ class Bracelets(commands.Cog):
     @commands.command(name="id",
                       help="Provide a pattern ID from BB and get some info in the design!")
     async def id(self, ctx, bracelet_id):
-        #  ID taken in as a string in case the user adds "#" to the start of the ID, as is sometimes common
-        if bracelet_id[0] == "#":
-            bracelet_id = bracelet_id[1:]
 
-        try:
-            int(bracelet_id)
-        except ValueError:
-            await ctx.reply("Looks like you entered the ID wrong, double check and try again.", mention_author=False)
-            return
-
-        valid_id, pattern_info, style, url = get_html(bracelet_id)
+        valid_id, pattern_info, style, url = id_processing(bracelet_id)
 
         if valid_id:
             # Gather all of the parts of the embed message
@@ -72,9 +80,10 @@ class Bracelets(commands.Cog):
     # Preview a finished bracelet
     @commands.command(name="pre",
                       help="Provide a pattern ID from BB and get a preview of a finished bracelet.")
-    async def pre(self, ctx, bracelet_id: int):
-        bracelet_id = str(bracelet_id)
-        valid_id, pattern_info, style, url = get_html(bracelet_id)
+    async def pre(self, ctx, bracelet_id):
+
+        valid_id, pattern_info, style, url = id_processing(bracelet_id)
+
         if valid_id:
             # Gather all of the parts of the embed message
             braceletSoup = bs4.BeautifulSoup(pattern_info.text, "html.parser")
@@ -86,15 +95,16 @@ class Bracelets(commands.Cog):
             embed = embed_extras(embed, crafter,  crafter_url, crafter_icon)
             embed.set_image(url=preview[0].get("src"))
 
-            await ctx.send(embed=embed, mention_author=False)
+            await ctx.reply(embed=embed, mention_author=False)
         else:
             await ctx.reply("I couldn't find #" + bracelet_id + ", sorry about that.", mention_author=False)
 
     @commands.command(name="pic",
                       help="See a picture of a completed bracelet for a certain pattern!")
-    async def pic(self, ctx, bracelet_id: int):
-        bracelet_id = str(bracelet_id)
-        valid_id, pattern_info, style, url = get_html(bracelet_id)
+    async def pic(self, ctx, bracelet_id):
+
+        valid_id, pattern_info, style, url = id_processing(bracelet_id)
+
         if valid_id:
             # Gather all of the parts of the embed message
             braceletSoup = bs4.BeautifulSoup(pattern_info.text, "html.parser")
@@ -115,21 +125,18 @@ class Bracelets(commands.Cog):
             embed.description = "This photo of #" + bracelet_id + " was uploaded " + pic_crafter.getText() + ". \n" + \
                                 "It's one of " + str(len(pictures)) + " uploaded."
             embed.set_image(url=picture.get("href"))
-            await ctx.send(embed=embed)
+            await ctx.reply(embed=embed, mention_author=False)
         else:
             await ctx.reply("I couldn't find any pictures of #" + bracelet_id + ", sorry about that.",
                             mention_author=False)
 
-    # These both handle ID inputs that aren't numbers
+    # These handle ID inputs that aren't numbers
     @id.error
+    @pre.error
+    @pic.error
     async def id_error(self, ctx, error):
         if isinstance(error, commands.BadArgument):
-            await ctx.send("ID must be a number!")
-
-    @pre.error
-    async def pre_error(self, ctx, error):
-        if isinstance(error, commands.BadArgument):
-            await ctx.send("ID must be a number!")
+            await ctx.reply("ID must be a number!", mention_author=False)
 
 
 def setup(bot):
