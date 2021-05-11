@@ -7,7 +7,10 @@ import random
 
 # This gets reused often so it's a function
 def embed_init(bracelet_id, style, crafter, variations, url):
-    description = style + crafter[0].getText() + ".\n" + "Variations: " + variations
+    # The "if not variations" statement accounts for pre and pic where variations are not needed for output
+    # and "variations" is given as None to this function
+    description = style + crafter[0].getText() + "." if not variations else \
+        style + crafter[0].getText() + ".\n" + "Variations: " + variations
     embed = discord.Embed(title="Pattern #" + bracelet_id,
                           color=0xf7633f,
                           description=description,
@@ -37,7 +40,8 @@ def id_processing(bracelet_id):
         raise commands.BadArgument
 
     # get_html function returns "valid_id, pattern_info, style, url"
-    return get_html(bracelet_id)
+    valid_id, pattern_info, style, url = get_html(bracelet_id)
+    return valid_id, pattern_info, style, url, bracelet_id
 
 
 class Bracelets(commands.Cog):
@@ -50,7 +54,7 @@ class Bracelets(commands.Cog):
                       help="Provide a pattern ID from BB and get some info in the design!")
     async def id(self, ctx, bracelet_id):
 
-        valid_id, pattern_info, style, url = id_processing(bracelet_id)
+        valid_id, pattern_info, style, url, bracelet_id = id_processing(bracelet_id)
 
         if valid_id:
             # Gather all of the parts of the embed message
@@ -81,7 +85,7 @@ class Bracelets(commands.Cog):
                       help="Provide a pattern ID from BB and get a preview of a finished bracelet.")
     async def pre(self, ctx, bracelet_id):
 
-        valid_id, pattern_info, style, url = id_processing(bracelet_id)
+        valid_id, pattern_info, style, url, bracelet_id = id_processing(bracelet_id)
 
         if valid_id:
             # Gather all of the parts of the embed message
@@ -102,25 +106,23 @@ class Bracelets(commands.Cog):
                       help="See a picture of a completed bracelet for a certain pattern!")
     async def pic(self, ctx, bracelet_id):
 
-        valid_id, pattern_info, style, url = id_processing(bracelet_id)
-
+        valid_id, pattern_info, style, url, bracelet_id = id_processing(bracelet_id)
+        print("CHECK 0")
         if valid_id:
             # Gather all of the parts of the embed message
             braceletSoup = bs4.BeautifulSoup(pattern_info.text, "html.parser")
             crafter, crafter_icon, crafter_url = crafter_info(braceletSoup)
             pictures = braceletSoup.select(".photos_item > a")
-
+            print("CHECK 1")
             if not pictures:
                 await ctx.reply("I couldn't find any pictures for #" + bracelet_id + ", sorry about that.",
                                 mention_author=False)
             pic_num = random.randint(0, len(pictures)-1)
             picture = braceletSoup.select(".photos_item > a")[pic_num]
             pic_crafter = braceletSoup.select(".photos_item > .info > .added_by")[pic_num]
-
             # Build the embed message
             embed = embed_init(bracelet_id, style, crafter, None, url)
             embed = embed_extras(embed, crafter,  crafter_url, crafter_icon)
-
             embed.description = "This photo of #" + bracelet_id + " was uploaded " + pic_crafter.getText() + ". \n" + \
                                 "It's one of " + str(len(pictures)) + " uploaded."
             embed.set_image(url=picture.get("href"))
