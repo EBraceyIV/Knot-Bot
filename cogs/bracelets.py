@@ -5,12 +5,14 @@ from cogs.html import *
 import random
 
 
-# This gets reused often so it's a function
+# EMBED INIT
+# Starts an embed message using the necessary attributes, along with those used on any embed output by this cog
 def embed_init(bracelet_id, style, crafter, variations, url):
     # The "if not variations" statement accounts for pre and pic where variations are not needed for output
-    # and "variations" is given as None to this function
+    # and "variations" is given as None to this function, otherwise some number represented as a string is provided
     description = style + crafter[0].getText() + "." if not variations else \
         style + crafter[0].getText() + ".\n" + "Variations: " + variations
+    # The color used on the embeds is the color used in the BB website header
     embed = discord.Embed(title="Pattern #" + bracelet_id,
                           color=0xf7633f,
                           description=description,
@@ -19,6 +21,8 @@ def embed_init(bracelet_id, style, crafter, variations, url):
     return embed
 
 
+# EMBED EXTRAS
+# Reused embed attributes for the pre and pic commands
 def embed_extras(embed, crafter, crafter_url, crafter_icon):
     embed.set_author(name=crafter[0].getText(),
                      url=crafter_url[0].get("href"), icon_url=crafter_icon[0].get("src"))
@@ -26,6 +30,8 @@ def embed_extras(embed, crafter, crafter_url, crafter_icon):
     return embed
 
 
+# ID PROCESSING
+# Handles multiples necessary procedures for each command requiring a BB pattern ID
 def id_processing(bracelet_id):
     #  ID taken in as a string in case the user adds "#" to the start of the ID, as is sometimes common
     if bracelet_id[0] == "#":
@@ -39,7 +45,7 @@ def id_processing(bracelet_id):
         # to be an async function
         raise commands.BadArgument
 
-    # get_html function returns "valid_id, pattern_info, style, url"
+    # get_html sorts through the BB page of the provided pattern ID for the necessary information
     valid_id, pattern_info, style, url = get_html(bracelet_id)
     return valid_id, pattern_info, style, url, bracelet_id
 
@@ -107,25 +113,28 @@ class Bracelets(commands.Cog):
     async def pic(self, ctx, bracelet_id):
 
         valid_id, pattern_info, style, url, bracelet_id = id_processing(bracelet_id)
-        print("CHECK 0")
+
         if valid_id:
             # Gather all of the parts of the embed message
             braceletSoup = bs4.BeautifulSoup(pattern_info.text, "html.parser")
             crafter, crafter_icon, crafter_url = crafter_info(braceletSoup)
             pictures = braceletSoup.select(".photos_item > a")
-            print("CHECK 1")
+
             if not pictures:
                 await ctx.reply("I couldn't find any pictures for #" + bracelet_id + ", sorry about that.",
                                 mention_author=False)
+
             pic_num = random.randint(0, len(pictures)-1)
             picture = braceletSoup.select(".photos_item > a")[pic_num]
             pic_crafter = braceletSoup.select(".photos_item > .info > .added_by")[pic_num]
+
             # Build the embed message
             embed = embed_init(bracelet_id, style, crafter, None, url)
             embed = embed_extras(embed, crafter,  crafter_url, crafter_icon)
             embed.description = "This photo of #" + bracelet_id + " was uploaded " + pic_crafter.getText() + ". \n" + \
                                 "It's one of " + str(len(pictures)) + " uploaded."
             embed.set_image(url=picture.get("href"))
+
             await ctx.reply(embed=embed, mention_author=False)
         else:
             await ctx.reply("I couldn't find any pictures of #" + bracelet_id + ", sorry about that.",
