@@ -149,5 +149,5 @@ class Bracelets(commands.Cog):
             await ctx.reply("ID must be a number!", mention_author=False)
 
 
-def setup(bot):
-    bot.add_cog(Bracelets(bot))
+async def setup(bot):
+    await bot.add_cog(Bracelets(bot))

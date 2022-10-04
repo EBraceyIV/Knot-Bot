@@ -50,5 +50,5 @@ class Auto(commands.Cog):
 
 
 # Add the cog
-def setup(bot):
-    bot.add_cog(Auto(bot))
+async def setup(bot):
+    await bot.add_cog(Auto(bot))
