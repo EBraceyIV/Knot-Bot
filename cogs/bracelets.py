@@ -1,5 +1,5 @@
 import discord
-from discord.ext import commands
+from discord import app_commands
 import bs4
 from cogs.html import *
 import random
@@ -54,11 +54,12 @@ class Bracelets(commands.Cog):
 
     def __init__(self, bot):
         self.bot = bot
+        self.GUILD = str(bot.guilds[0].id)
 
     # Display information about a pattern given its #ID
-    @commands.command(name="id",
-                      help="Provide a pattern ID from BB and get some info in the design!")
-    async def id(self, ctx, bracelet_id):
+    @app_commands.command(name="id",
+                          description="Provide a pattern ID from BB and get some info in the design!")
+    async def id(self, interaction: discord.Interaction, bracelet_id: str):
 
         valid_id, pattern_info, style, url, bracelet_id = id_processing(bracelet_id)
 
@@ -82,14 +83,15 @@ class Bracelets(commands.Cog):
             embed.add_field(name="Colors", value=colors[0].getText())
             embed.set_image(url=preview[0].get("src"))
 
-            await ctx.reply(embed=embed, mention_author=False)
+            await interaction.response.send_message(embed=embed)
         else:
-            await ctx.reply("I couldn't find #" + bracelet_id + ", sorry about that.", mention_author=False)
+            await interaction.response.send_message("I couldn't find #" + bracelet_id + ", sorry about that.",
+                                                    ephemeral=True)
 
     # Preview a finished bracelet
-    @commands.command(name="pre",
-                      help="Provide a pattern ID from BB and get a preview of a finished bracelet.")
-    async def pre(self, ctx, bracelet_id):
+    @app_commands.command(name="pre",
+                          description="Provide a pattern ID from BB and get a preview of a finished bracelet.")
+    async def pre(self, interaction: discord.Interaction, bracelet_id: str):
 
         valid_id, pattern_info, style, url, bracelet_id = id_processing(bracelet_id)
 
@@ -104,13 +106,14 @@ class Bracelets(commands.Cog):
             embed = embed_extras(embed, crafter,  crafter_url, crafter_icon)
             embed.set_image(url=preview[0].get("src"))
 
-            await ctx.reply(embed=embed, mention_author=False)
+            await interaction.response.send_message(embed=embed)
         else:
-            await ctx.reply("I couldn't find #" + bracelet_id + ", sorry about that.", mention_author=False)
+            await interaction.response.send_message("I couldn't find #" + bracelet_id + ", sorry about that.",
+                                                    ephemeral=True)
 
-    @commands.command(name="pic",
-                      help="See a picture of a completed bracelet for a certain pattern!")
-    async def pic(self, ctx, bracelet_id):
+    @app_commands.command(name="pic",
+                          description="See a picture of a completed bracelet for a certain pattern!")
+    async def pic(self, interaction: discord.Interaction, bracelet_id: str):
 
         valid_id, pattern_info, style, url, bracelet_id = id_processing(bracelet_id)
 
@@ -121,8 +124,9 @@ class Bracelets(commands.Cog):
             pictures = braceletSoup.select(".photos_item > a")
 
             if not pictures:
-                await ctx.reply("I couldn't find any pictures for #" + bracelet_id + ", sorry about that.",
-                                mention_author=False)
+                await interaction.response.send_message("I couldn't find any pictures for #" + bracelet_id +
+                                                        ", sorry about that.",
+                                                        ephemeral=True)
 
             pic_num = random.randint(0, len(pictures)-1)
             picture = braceletSoup.select(".photos_item > a")[pic_num]
@@ -135,10 +139,11 @@ class Bracelets(commands.Cog):
                                 "It's one of " + str(len(pictures)) + " uploaded."
             embed.set_image(url=picture.get("href"))
 
-            await ctx.reply(embed=embed, mention_author=False)
+            await interaction.response.send_message(embed=embed)
         else:
-            await ctx.reply("I couldn't find any pictures of #" + bracelet_id + ", sorry about that.",
-                            mention_author=False)
+            await interaction.response.send_message("I couldn't find any pictures of #" + bracelet_id +
+                                                    ", sorry about that.",
+                                                    ephemeral=True)
 
     # These handle ID inputs that aren't numbers
     @id.error
@@ -150,4 +155,4 @@ class Bracelets(commands.Cog):
 
 
 async def setup(bot):
-    await bot.add_cog(Bracelets(bot))
+    await bot.add_cog(Bracelets(bot), guild=discord.Object(id=bot.guilds[0].id))

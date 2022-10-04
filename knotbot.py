@@ -37,6 +37,13 @@ async def on_ready():
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.playing, name="with string."))
 
 
+@bot.command(name="sync", help="Sync the slash commands", hidden=True)
+async def sync(ctx):
+    await bot.tree.sync(guild=ctx.guild)
+    print("Slash commands synced: " + str(await bot.tree.fetch_commands(guild=ctx.guild)))
+    await ctx.send("Slashes synced.")
+
+
 # ERROR HANDLING
 @bot.event
 async def on_command_error(ctx, error):
